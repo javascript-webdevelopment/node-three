@@ -133,3 +133,29 @@ This folder is where we will write our own SQL commands.
 ### Seed Folder
 
 When ever I create a table, I like to make a copy of the schema and save it as it's own file inside of the `seed folder` that will be nested inside the `db` folder. This way, if I ever have to drop a table I can use the seed file to reference how the `schema` was setup for that table.
+
+## Interacting With The Database In The Controller Functions
+
+We can interact with our database inside of our controller functions that handle the request that is made to our API. We first just need to get the instance of the database that lives on the request object. Since we used a `setter` method to add the database to our `app` object, we need to use a `getter` method to get that object.
+
+An example of the controller function would look like the following
+
+```js
+const getRacers = (req, res) => {
+    // Get the db instance
+    const db = req.app.get('db');
+    // use the getRacers sql statement
+    db.get_racers()
+        .then(racers => {
+            // racers will be an array with our racers from the db
+            // send the racers back
+            res.status(200).send(racers);
+        });
+};
+```
+
+We first get the instance of the database using a `getter` method. Then we use our custom sql statement `get_racers` to interact with our database. Since it returns a promise, we use a `.then()` to handle the response (which will always be an array), then we send a response back to the client from the server.
+
+## Follow The Code
+
+Take a look at the code examples inside this repo to understand the syntax and structure for creating a full CRUD API that interacts with a database.
