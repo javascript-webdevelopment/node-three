@@ -78,6 +78,8 @@ We can then store the variables that we want to keep private inside of this file
 
 We need to make sure that we include the `.ENV` file in the `.gitignore` file so that that the file will not be pushed up to Github.
 
+> Note: I have not ignored my .ENV file just so you can refer to it. I deleted the db that the connection string uses, so it will not be harmful for me.
+
 ## DOTENV
 
 `dotenv` is the module of code we can use to bring our variables declared in the `.ENV` into our Node server.
@@ -96,3 +98,38 @@ require('dotenv').config();
 
 We now have access to our environment variables.
 
+## Massive JS
+
+`massive` is a data mapper that we will use to have our server interact with our database.
+
+We first need to install it to our application from NPM, in your terminal run:
+
+```bash
+$ npm install massive
+```
+
+Once it's installed, require it in to the file that we will use it (index.js).
+
+```js
+const massive = require('massive');
+```
+
+Now we can invoke the `massive` function passing in our connection string to get connected to our db and return an instance of it.
+
+```js
+massive(CONNECTION_STRING).then((dbInstance) => {
+    app.set('db', dbInstance);
+});
+```
+
+Massive has now set an instance of the heroku postgres database as an object in our application. We can use this object to use the custom SQL statements that we write or the built in methods that come from Massive to interact with our database to create, read, update, and delete the data stored there.
+
+## DB Folder
+
+We will create a folder called `db` at the root of our project. Massive will be able to pick up on this and put our custom SQL statements on the db instance that it returns.
+
+This folder is where we will write our own SQL commands.
+
+### Seed Folder
+
+When ever I create a table, I like to make a copy of the schema and save it as it's own file inside of the `seed folder` that will be nested inside the `db` folder. This way, if I ever have to drop a table I can use the seed file to reference how the `schema` was setup for that table.
