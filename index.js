@@ -3,6 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const massive = require('massive');
 
+// Controller File
+const racerCtrl = require('./controllers/racer.controller');
+
 // .ENV Variables
 const {
     CONNECTION_STRING
@@ -24,13 +27,13 @@ massive(CONNECTION_STRING).then((dbInstance) => {
 });
 
 // End Points
-app.get('/api/racers');
+app.get('/api/racers', racerCtrl.getRacers);
 
-app.post('/api/racers');
+app.post('/api/racers', racerCtrl.addRacers);
 
-app.put('/api/racers/:id');
+app.put('/api/racers/:id', racerCtrl.updateRacer);
 
-app.delete('/api/racers/:id');
+app.delete('/api/racers/:id', racerCtrl.deleteRacer);
 
 // Server Listening
 app.listen(8080, () => console.log('Server Running!'))
